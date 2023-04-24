@@ -9,12 +9,11 @@ public final class QuickSort {
 	
 	public static void main(String[] args) {
 		ArrayList<Integer> values = new ArrayList<>(Arrays.asList(8, 6, 10, 2, 15, 1, 20, 11));
-		QuickSort quickSort = new QuickSort();
-		quickSort.sortFromLow(values, 0, values.size() - 1);
+		QuickSort.sortFromLow(values, 0, values.size() - 1);
 		System.out.println(values);
 	}
 
-	public void sort(List<Integer> values, int low, int high) {
+	public static void sort(List<Integer> values, int low, int high) {
 		if (low >= high) return;
 
 		// take the last element as the partition value. Ideally, we should shuffle the values first but we skip the shuffle for simplicity.
@@ -34,7 +33,7 @@ public final class QuickSort {
 		sort(values, partition + 1, high);
 	}
 	
-	public void sortFromLow(List<Integer> values, int low, int high) {
+	public static void sortFromLow(List<Integer> values, int low, int high) {
 		if (low >= high) return;
 		
 		// take the first element as the partition value. Ideally, we should shuffle the values first but we skip the shuffle for simplicity.
@@ -55,7 +54,7 @@ public final class QuickSort {
 		sort(values, targetPosition + 1, high);
 	}
 	
-	private void swap(List<Integer> values, int index1, int index2) {
+	private static void swap(List<Integer> values, int index1, int index2) {
 		int value1 = values.get(index1);
 		values.set(index1, values.get(index2));
 		values.set(index2, value1);

@@ -14,10 +14,10 @@ public final class Graph {
 	public ArrayList<EdgeNode> edges = new ArrayList<>();
 	
 	public static void main(String[] args) {
-		Graph graph = new Graph(8, false);
+		Graph graph = new Graph(6, false);
+		graph.insertEdge(0, 5, false);
+		graph.insertEdge(0, 4, false);
 		graph.insertEdge(0, 1, false);
-		graph.insertEdge(0, 2, false);
-		graph.insertEdge(6, 1, false);
 		graph.readGraph();
 	} 
 		
@@ -36,8 +36,14 @@ public final class Graph {
 	}
 	
 	public void insertEdge(int fromId, int toId, boolean isDirected) {
-		EdgeNode newEdgeNode = new EdgeNode(toId, 0, this.edges.get(fromId));
-		this.edges.set(fromId, newEdgeNode);
+		if (this.edges.get(fromId) == null) {
+			this.edges.set(fromId, new EdgeNode(toId, 0, null));
+		} else {
+			EdgeNode edgeNode = this.edges.get(fromId);
+			EdgeNode newNode = new EdgeNode(toId, 0, edgeNode);
+			this.edges.set(fromId, newNode);
+		}
+		
 		this.outDegrees.set(fromId, this.outDegrees.get(fromId) + 1);
 		if (!isDirected) {
 			insertEdge(toId, fromId, true);
@@ -53,18 +59,17 @@ public final class Graph {
 			EdgeNode edgeNode = this.edges.get(i);
 			while (edgeNode != null) {
 				System.out.println("one neighbor id is " + edgeNode.verticeId);
-				System.out.println("its weight is " + edgeNode.weight);
 				edgeNode = edgeNode.nextNode;
 			}
 		}
 	}
 	
-	private final class EdgeNode{
-		private int verticeId;
-		private int weight;
-		private EdgeNode nextNode;
+	public final class EdgeNode{
+		public int verticeId;
+		public int weight;
+		public EdgeNode nextNode;
 		
-		private EdgeNode(int verticeId, int edgeWeight, EdgeNode nextNode) {
+		public EdgeNode(int verticeId, int edgeWeight, EdgeNode nextNode) {
 			this.verticeId = verticeId;
 			this.weight= edgeWeight;
 			this.nextNode = nextNode;

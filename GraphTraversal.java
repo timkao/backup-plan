@@ -15,6 +15,10 @@ public class GraphTraversal {
 	private ArrayList<Boolean> processed = new ArrayList<>();
 	private ArrayList<Integer> parent = new ArrayList<>();
 	
+	// only for two-color problem.
+	private ArrayList<String> colorList = new ArrayList<>(); // use String here since the color could be "BLACK", "WHITE" OR "NA". Using Boolean will give us wrong answer
+	private Boolean isBipartite = true;
+	
 	public static void main(String[] args) {
 		Graph graph = new Graph(10, false);
 		graph.insertEdge(0, 5, false);
@@ -27,7 +31,7 @@ public class GraphTraversal {
 		graph.insertEdge(6, 8, false);
 		graph.insertEdge(7, 9, false);
 		GraphTraversal graphTraversal = new GraphTraversal(graph);
-		System.out.println("The graph has " + graphTraversal.findNumConnectedComponent() + " separated component.");
+		System.out.println("is the graph bipartite? " + graphTraversal.verifyBipartite());
 	}
 	
 	public GraphTraversal(Graph graph) {
@@ -35,9 +39,19 @@ public class GraphTraversal {
 		for (int i = 0; i < graph.numVertices; i++) {
 			discovered.add(false);
 			processed.add(false);
+			colorList.add("NA");
 			parent.add(i);
-		}
+		}	
+	}
 		
+	public boolean verifyBipartite() {
+		for (int i = 0; i < graph.numVertices; i++) {
+			if (!discovered.get(i) && isBipartite) {
+				bfs(i);
+			}
+		}
+		System.out.println(colorList);
+		return isBipartite;
 	}
 	
 	public Integer findNumConnectedComponent() {
@@ -79,6 +93,12 @@ public class GraphTraversal {
 			EdgeNode edgeNode = graph.edges.get(currVertice);
 			while (edgeNode != null) {
 				processEdge(currVertice, edgeNode, graph.isDirected);
+				
+				// only for two color use casse
+				if (!isBipartite) {
+					return;
+				}
+				
 				if (!discovered.get(edgeNode.verticeId)) {
 					verticeQueue.offer(edgeNode.verticeId);	
 					discovered.set(edgeNode.verticeId, true);
@@ -92,6 +112,13 @@ public class GraphTraversal {
 	
 	private void processVerticeEarly(int currVertice) {
 		System.out.println("This is vertice " + currVertice);
+		
+		// only for two color use case
+		String color = colorList.get(currVertice);
+		if (color.equals("NA")) {
+			colorList.set(currVertice, "BLACK");
+		}
+		
 		return;
 	}
 	
@@ -100,15 +127,33 @@ public class GraphTraversal {
 		if (!discovered.get(edgeVertice)) {
 			parent.set(edgeVertice, currVertice);
 			System.out.println("process tree edge between " + currVertice + " and " + edgeVertice);
+			
+			// only for two color use case
+			assignColor(currVertice, edgeVertice);
 		} else if (!processed.get(edgeVertice) || !isDirected) {
 			System.out.println("process back edge between " + currVertice + " and " + edgeVertice);
 		}
+		
+		// only for two color use case
+		isBipartite = !hasSameColor(currVertice, edgeVertice);
 		return;
 	}
 	
 	private void processVerticeLate(int verticeId) {
 		System.out.println("---------------Finished processing vertice " + verticeId);
 		return;
+	}
+	
+	
+	private void assignColor(int curId, int edgeId) {
+		String edgeColor = colorList.get(edgeId);
+		if (edgeColor.equals("NA")) {
+			colorList.set(edgeId, colorList.get(curId).equals("BLACK") ? "WHITE" : "BLACK");
+		}
+	}
+	
+	private boolean hasSameColor(int curId, int edgeId) {
+		return colorList.get(curId).equals(colorList.get(edgeId));
 	}
 
 }

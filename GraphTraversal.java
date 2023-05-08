@@ -27,14 +27,29 @@ public class GraphTraversal {
 		graph.insertEdge(6, 8, false);
 		graph.insertEdge(7, 9, false);
 		GraphTraversal graphTraversal = new GraphTraversal(graph);
-		graphTraversal.bfs(0);
-		graphTraversal.findPath(0, 3);
+		System.out.println("The graph has " + graphTraversal.findNumConnectedComponent() + " separated component.");
 	}
 	
 	public GraphTraversal(Graph graph) {
 		this.graph = graph;
+		for (int i = 0; i < graph.numVertices; i++) {
+			discovered.add(false);
+			processed.add(false);
+			parent.add(i);
+		}
+		
 	}
 	
+	public Integer findNumConnectedComponent() {
+		Integer numConnectedComponent = 0;
+		for (int i = 0; i < graph.numVertices; i++) {
+			if (!discovered.get(i)) {
+				numConnectedComponent++;
+				bfs(i);
+			}
+		}
+		return numConnectedComponent;
+	}
 	
 	// Print the path from start vertice to the end vertice.
 	public void findPath(int start, int end) {
@@ -55,12 +70,6 @@ public class GraphTraversal {
 			return;
 		}
 
-		for (int i = 0; i < graph.numVertices; i++) {
-			discovered.add(false);
-			processed.add(false);
-			parent.add(i);
-		}
-		
 		verticeQueue.offer(start);
 		discovered.set(start, true);
 		while(!verticeQueue.isEmpty()) {

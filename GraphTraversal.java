@@ -14,7 +14,7 @@ public class GraphTraversal {
 	private static ArrayList<Integer> parent = new ArrayList<>();
 	
 	public static void main(String[] args) {
-		Graph graph = new Graph(6, false);
+		Graph graph = new Graph(6, true);
 		graph.insertEdge(0, 5, false);
 		graph.insertEdge(0, 4, false);
 		graph.insertEdge(0, 1, false);
@@ -27,6 +27,7 @@ public class GraphTraversal {
 	
 	private GraphTraversal() {};
 	
+	// Breadth First Traversal
 	public static void bfs(Graph graph, int start) {
 		if (start > graph.numVertices - 1) {
 			return;
@@ -68,7 +69,7 @@ public class GraphTraversal {
 		if (!discovered.get(edgeVertice)) {
 			parent.set(edgeVertice, currVertice);
 			System.out.println("process tree edge between " + currVertice + " and " + edgeVertice);
-		} else if (processed.get(edgeVertice) && !isDirected) {
+		} else if (!processed.get(edgeVertice) || !isDirected) {
 			System.out.println("process back edge between " + currVertice + " and " + edgeVertice);
 		}
 		return;

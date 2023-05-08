@@ -9,13 +9,14 @@ import java.util.List;
 
 public class GraphTraversal {
 	
-	private static Queue<Integer> verticeQueue = new LinkedList<>();
-	private static ArrayList<Boolean> discovered = new ArrayList<>();
-	private static ArrayList<Boolean> processed = new ArrayList<>();
-	private static ArrayList<Integer> parent = new ArrayList<>();
+	private Graph graph;
+	private Queue<Integer> verticeQueue = new LinkedList<>();
+	private ArrayList<Boolean> discovered = new ArrayList<>();
+	private ArrayList<Boolean> processed = new ArrayList<>();
+	private ArrayList<Integer> parent = new ArrayList<>();
 	
 	public static void main(String[] args) {
-		Graph graph = new Graph(6, true);
+		Graph graph = new Graph(10, false);
 		graph.insertEdge(0, 5, false);
 		graph.insertEdge(0, 4, false);
 		graph.insertEdge(0, 1, false);
@@ -23,24 +24,33 @@ public class GraphTraversal {
 		graph.insertEdge(1, 2, false);
 		graph.insertEdge(2, 3, false);
 		graph.insertEdge(3, 4, false);
-		bfs(graph, 0);
-		findPath(0, 3, parent);
+		graph.insertEdge(6, 8, false);
+		graph.insertEdge(7, 9, false);
+		GraphTraversal graphTraversal = new GraphTraversal(graph);
+		graphTraversal.bfs(0);
+		graphTraversal.findPath(0, 3);
 	}
 	
-	public static void findPath(int start, int end, List<Integer> parent) {
+	public GraphTraversal(Graph graph) {
+		this.graph = graph;
+	}
+	
+	
+	// Print the path from start vertice to the end vertice.
+	public void findPath(int start, int end) {
 		System.out.println("current vertice is " + end);
-		int parentInt = parent.get(end);
+		int parentInt = this.parent.get(end);
 		if (parentInt == end) {
 			if (parentInt != start) {
 				System.out.println("No available route");
 			}
 			return;
 		}
-		findPath(start, parentInt, parent);
+		findPath(start, parentInt);
 	}
 	
 	// Breadth First Traversal
-	public static void bfs(Graph graph, int start) {
+	public void bfs(int start) {
 		if (start > graph.numVertices - 1) {
 			return;
 		}
@@ -71,12 +81,12 @@ public class GraphTraversal {
 		
 	}
 	
-	private static void processVerticeEarly(int currVertice) {
+	private void processVerticeEarly(int currVertice) {
 		System.out.println("This is vertice " + currVertice);
 		return;
 	}
 	
-	private static void processEdge(int currVertice, EdgeNode edgeNode, Boolean isDirected) {
+	private void processEdge(int currVertice, EdgeNode edgeNode, Boolean isDirected) {
 		int edgeVertice = edgeNode.verticeId;
 		if (!discovered.get(edgeVertice)) {
 			parent.set(edgeVertice, currVertice);
@@ -87,7 +97,7 @@ public class GraphTraversal {
 		return;
 	}
 	
-	private static void processVerticeLate(int verticeId) {
+	private void processVerticeLate(int verticeId) {
 		System.out.println("---------------Finished processing vertice " + verticeId);
 		return;
 	}

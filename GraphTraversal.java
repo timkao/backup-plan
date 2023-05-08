@@ -5,6 +5,7 @@ import algorithms.Graph.EdgeNode;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.List;
 
 public class GraphTraversal {
 	
@@ -23,9 +24,20 @@ public class GraphTraversal {
 		graph.insertEdge(2, 3, false);
 		graph.insertEdge(3, 4, false);
 		bfs(graph, 0);
+		findPath(0, 3, parent);
 	}
 	
-	private GraphTraversal() {};
+	public static void findPath(int start, int end, List<Integer> parent) {
+		System.out.println("current vertice is " + end);
+		int parentInt = parent.get(end);
+		if (parentInt == end) {
+			if (parentInt != start) {
+				System.out.println("No available route");
+			}
+			return;
+		}
+		findPath(start, parentInt, parent);
+	}
 	
 	// Breadth First Traversal
 	public static void bfs(Graph graph, int start) {

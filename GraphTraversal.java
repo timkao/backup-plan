@@ -46,7 +46,7 @@ public class GraphTraversal {
 			processed.set(currVertice, true);
 			EdgeNode edgeNode = graph.edges.get(currVertice);
 			while (edgeNode != null) {
-				processEdge(currVertice, edgeNode);
+				processEdge(currVertice, edgeNode, graph.isDirected);
 				if (!discovered.get(edgeNode.verticeId)) {
 					verticeQueue.offer(edgeNode.verticeId);	
 					discovered.set(edgeNode.verticeId, true);
@@ -63,12 +63,12 @@ public class GraphTraversal {
 		return;
 	}
 	
-	private static void processEdge(int currVertice, EdgeNode edgeNode) {
+	private static void processEdge(int currVertice, EdgeNode edgeNode, Boolean isDirected) {
 		int edgeVertice = edgeNode.verticeId;
 		if (!discovered.get(edgeVertice)) {
 			parent.set(edgeVertice, currVertice);
 			System.out.println("process tree edge between " + currVertice + " and " + edgeVertice);
-		} else if (processed.get(edgeVertice)) {
+		} else if (processed.get(edgeVertice) && !isDirected) {
 			System.out.println("process back edge between " + currVertice + " and " + edgeVertice);
 		}
 		return;
